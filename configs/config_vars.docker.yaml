@@ -1,7 +1,7 @@
 worker-threads: 4
 worker-fs-threads: 2
 worker-grpc-threads: 2
-logger-level: info
+logger-level: debug
 
 is_testing: false
 

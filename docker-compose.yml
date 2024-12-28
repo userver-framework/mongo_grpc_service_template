@@ -1,18 +1,45 @@
 version: "2.3"
 
 services:
-    service_template-container:
+    mongo:
+        container_name: service-mongo
+        image: mongo
+        ports:
+          - 27017
+        networks:
+          - mongo
+
+    mongo_grpc_service_template-container:
         image: ghcr.io/userver-framework/ubuntu-22.04-userver-pg:latest
         privileged: true
-        network_mode: bridge
         environment:
           - PREFIX=${PREFIX:-~/.local}
-          - CCACHE_DIR=/service_template/.ccache
+          - CCACHE_DIR=/mongo_grpc_service_template/.ccache
           - CORES_DIR=/cores
         volumes:
-          - .:/service_template:rw
+          - .:/mongo_grpc_service_template:rw
         ports:
           - 8080:8080
-        working_dir: /service_template
+          - 8081:8081
+        working_dir: /mongo_grpc_service_template
         entrypoint:
           - ./tests/run_as_user.sh
+        depends_on:
+          - mongo
+        networks:
+          - mongo
+          - dockerbridge
+
+networks:
+    mongo:
+        driver: bridge
+    dockerbridge:
+        enable_ipv6: true
+        driver: bridge
+        driver_opts:
+            com.docker.network.enable_ipv6: "true"
+        ipam:
+            driver: default
+            config:
+             - subnet: 2001:3984:3989::/64
+               gateway: 2001:3984:3989::1

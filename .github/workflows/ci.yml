@@ -49,6 +49,15 @@ jobs:
                 sudo apt install --allow-downgrades -y $(cat third_party/userver/scripts/docs/en/deps/${{matrix.os}}.md | tr '\n' ' ')
                 python3 -m pip install -r requirements.txt
 
+          - name: Install mongo
+            run: |
+                wget -qO- https://pgp.mongodb.com/server-7.0.asc | sudo gpg --dearmor | sudo tee /usr/share/keyrings/mongodb-server-7.0.gpg >/dev/null
+                echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse" \
+                      | sudo tee -a /etc/apt/sources.list.d/mongodb-org-7.0.list
+                sudo apt update
+                sudo apt install mongodb-org
+                sudo apt install mongodb-mongosh
+
           - name: Setup ccache
             run: |
                 ccache -M 2.0GB
@@ -67,17 +76,17 @@ jobs:
           - name: Test run after install
             if: matrix.make == 'test-release'
             run: >-
-                ./local_installation/bin/service_template
-                --config=./local_installation/etc/service_template/static_config.yaml
-                --config_vars=./local_installation/etc/service_template/config_vars.yaml
+                ./local_installation/bin/mongo_grpc_service_template
+                --config=./local_installation/etc/mongo_grpc_service_template/static_config.yaml
+                --config_vars=./local_installation/etc/mongo_grpc_service_template/config_vars.yaml
                 &
 
           - name: Check work run service
             if: matrix.make == 'test-release'
             run: |
-                ps aux | grep service_template | grep config && curl http://localhost:8080/ping -v
+                ps aux | grep mongo_grpc_service_template | grep config && curl http://localhost:8080/ping -v
 
           - name: Stop all
             if: matrix.make == 'test-release'
             run: |
-                killall service_template
+                killall mongo_grpc_service_template

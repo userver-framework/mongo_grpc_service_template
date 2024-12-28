@@ -1,10 +1,14 @@
 cmake_minimum_required(VERSION 3.12)
-project(service_template CXX)
+project(mongo_grpc_service_template CXX)
 
 
 # Adding userver dependency
-find_package(userver COMPONENTS core postgresql QUIET)
+find_package(userver COMPONENTS core mongo grpc QUIET)
 if(NOT userver_FOUND)  # Fallback to subdirectory usage
+    # Enable userver libraries that are needed in this project
+    set(USERVER_FEATURE_MONGODB ON CACHE BOOL "" FORCE)
+    set(USERVER_FEATURE_GRPC ON CACHE BOOL "" FORCE)
+
     # Compatibility mode: some systems don't support these features
     set(USERVER_FEATURE_CRYPTOPP_BLAKE2 OFF CACHE BOOL "" FORCE)
     set(USERVER_FEATURE_GRPC_CHANNELZ OFF CACHE BOOL "" FORCE)
@@ -25,8 +29,14 @@ userver_setup_environment()
 add_library(${PROJECT_NAME}_objs OBJECT
     src/hello.hpp
     src/hello.cpp
+    src/hello_client.hpp
+    src/hello_client.cpp
 )
-target_link_libraries(${PROJECT_NAME}_objs PUBLIC userver::core)
+target_link_libraries(${PROJECT_NAME}_objs PUBLIC userver::mongo userver::grpc)
+
+# Create a proto library with userver extensions
+userver_add_grpc_library(${PROJECT_NAME}_proto PROTOS handlers/hello.proto)
+target_link_libraries(${PROJECT_NAME}_objs PUBLIC ${PROJECT_NAME}_proto)
 
 
 # The Service
