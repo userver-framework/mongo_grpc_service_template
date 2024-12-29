@@ -37,7 +37,7 @@ jobs:
 
           - name: Install mongo
             run: |
-              docker-compose run --rm mongo_grpc_service_template-container --entrypoint="" bash -c '
+              docker-compose run --entrypoint="" --rm mongo_grpc_service_template-container bash -c '
                 wget -qO- https://pgp.mongodb.com/server-7.0.asc | gpg --dearmor | tee /usr/share/keyrings/mongodb-server-7.0.gpg >/dev/null
                 echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse" \
                       | tee -a /etc/apt/sources.list.d/mongodb-org-7.0.list
