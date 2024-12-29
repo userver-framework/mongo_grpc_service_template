@@ -42,4 +42,9 @@ jobs:
             run: make docker-build-release
 
           - name: Run tests
-            run: make docker-test-release
+            run: |
+              docker-compose run --entrypoint="" --rm mongo_grpc_service_template-container bash -c '
+                apt update
+                apt install -y mongodb-org mongodb-mongosh
+                ./tests/run_as_user.sh make test-release
+              '
