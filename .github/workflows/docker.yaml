@@ -35,6 +35,17 @@ jobs:
           - name: Setup ccache
             run: docker-compose run --rm mongo_grpc_service_template-container bash -c 'ccache -M 2.0GB && ccache -s'
 
+          - name: Install mongo
+            run: |
+              docker-compose run --rm mongo_grpc_service_template-container bash -c '
+                wget -qO- https://pgp.mongodb.com/server-7.0.asc | sudo gpg --dearmor | sudo tee /usr/share/keyrings/mongodb-server-7.0.gpg >/dev/null
+                echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse" \
+                      | sudo tee -a /etc/apt/sources.list.d/mongodb-org-7.0.list
+                sudo apt update
+                sudo apt install mongodb-org
+                sudo apt install mongodb-mongosh
+              '
+
           - name: Cmake
             run: make docker-cmake-release
 
