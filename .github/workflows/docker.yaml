@@ -33,7 +33,7 @@ jobs:
                 sudo apt install --allow-downgrades -y docker-compose
 
           - name: Setup ccache
-            run: docker-compose run --rm mongo_grpc_service_template-container bash -c 'ccache -M 2.0GB && ccache -s'
+            run: docker-compose run --rm service_template-container bash -c 'ccache -M 2.0GB && ccache -s'
 
           - name: Cmake
             run: make docker-cmake-release
@@ -43,7 +43,7 @@ jobs:
 
           - name: Run tests
             run: |
-              docker-compose run --entrypoint="" --rm mongo_grpc_service_template-container bash -c '
+              docker-compose run --entrypoint="" --rm service_template-container bash -c '
                 apt update
                 apt install -y mongodb-org mongodb-mongosh
                 ./tests/run_as_user.sh make test-release

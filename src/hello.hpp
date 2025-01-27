@@ -9,7 +9,7 @@
 #include <userver/storages/mongo/component.hpp>
 #include "hello_client.hpp"
 
-namespace mongo_grpc_service_template {
+namespace service_template {
 
 enum class UserType { kFirstTime, kKnown };
 
@@ -38,4 +38,4 @@ class Hello final : public handlers::api::HelloServiceBase::Component {
 
 void AppendHello(userver::components::ComponentList &component_list);
 
-} // namespace mongo_grpc_service_template
+} // namespace service_template

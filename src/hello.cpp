@@ -7,7 +7,7 @@
 #include <userver/storages/mongo/pool.hpp>
 #include <userver/utils/assert.hpp>
 
-namespace mongo_grpc_service_template {
+namespace service_template {
 
 Hello::SayHelloResult Hello::SayHello(CallContext& /*context*/,
                                       handlers::api::HelloRequest&& request) {
@@ -53,4 +53,4 @@ void AppendHello(userver::components::ComponentList& component_list) {
   component_list.Append<Hello>();
 }
 
-} // namespace mongo_grpc_service_template
+} // namespace service_template
