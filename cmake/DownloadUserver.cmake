@@ -27,11 +27,21 @@ function(download_userver)
     set(CPM_USE_NAMED_CACHE_DIRECTORIES ON)
   endif()
 
+  get_cmake_property(variable_names CACHE_VARIABLES)
+  set(userver_options)
+  foreach(variable ${variable_names})
+    string(SUBSTRING ${variable} 0 8 variable_prefix)
+    if(${variable_prefix} STREQUAL USERVER_)
+      list(APPEND userver_options "$CACHE{${variable}}")
+    endif()
+  endforeach()
+
   CPMAddPackage(
       NAME userver
       GITHUB_REPOSITORY userver-framework/userver
       VERSION ${ARG_VERSION}
       GIT_TAG ${ARG_GIT_TAG}
       ${ARG_UNPARSED_ARGUMENTS}
+      OPTIONS ${userver_options}
   )
 endfunction()
