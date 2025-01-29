@@ -17,6 +17,8 @@ function(download_userver)
     endif()
   endif()
 
+  # CMP0077 and CMP0126 are required for correct option forwarding.
+  cmake_minimum_required(VERSION 3.21)
   include(get_cpm)
 
   if(NOT DEFINED ARG_VERSION AND NOT DEFINED ARG_GIT_TAG)
@@ -27,21 +29,11 @@ function(download_userver)
     set(CPM_USE_NAMED_CACHE_DIRECTORIES ON)
   endif()
 
-  get_cmake_property(variable_names CACHE_VARIABLES)
-  set(userver_options)
-  foreach(variable ${variable_names})
-    string(SUBSTRING ${variable} 0 8 variable_prefix)
-    if(${variable_prefix} STREQUAL USERVER_)
-      list(APPEND userver_options "$CACHE{${variable}}")
-    endif()
-  endforeach()
-
   CPMAddPackage(
       NAME userver
       GITHUB_REPOSITORY userver-framework/userver
       VERSION ${ARG_VERSION}
       GIT_TAG ${ARG_GIT_TAG}
       ${ARG_UNPARSED_ARGUMENTS}
-      OPTIONS ${userver_options}
   )
 endfunction()
