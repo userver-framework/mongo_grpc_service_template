@@ -27,24 +27,11 @@ jobs:
                     ccache-dir-${{github.ref}}_run-
                     ccache-
 
-          - name: Install docker-compose
-            run: |
-                sudo apt update
-                sudo apt install --allow-downgrades -y docker-compose
-
-          - name: Setup ccache
-            run: docker-compose run --rm service_template-container bash -c 'ccache -M 2.0GB && ccache -s'
-
           - name: Cmake
             run: make docker-cmake-release
 
           - name: Build
             run: make docker-build-release
 
-          - name: Run tests
-            run: |
-              docker-compose run --entrypoint="" --rm service_template-container bash -c '
-                apt update
-                apt install -y mongodb-org mongodb-mongosh
-                ./tests/run_as_user.sh make test-release
-              '
+          - name: Test
+            run: make docker-test-release
