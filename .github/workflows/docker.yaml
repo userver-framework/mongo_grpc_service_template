@@ -33,10 +33,5 @@ jobs:
           - name: Build
             run: make docker-build-release
 
-          - name: Run tests
-            run: |
-              docker-compose run --entrypoint="" --rm service_template-container bash -c '
-                apt update
-                apt install -y mongodb-org mongodb-mongosh
-                ./tests/run_as_user.sh make test-release
-              '
+          - name: Test
+            run: make docker-test-release
