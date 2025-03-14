@@ -4,7 +4,7 @@
 
 #include <userver/yaml_config/merge_schemas.hpp>
 
-namespace mongo_grpc_service_template {
+namespace service_template {
 
 std::string HelloClient::SayHello(std::string name) {
   handlers::api::HelloRequest request;
@@ -36,4 +36,4 @@ void AppendHelloClient(userver::components::ComponentList& component_list) {
   component_list.Append<HelloClient>();
 }
 
-}  // namespace mongo_grpc_service_template
+}  // namespace service_template

@@ -32,8 +32,8 @@ int main(int argc, char* argv[]) {
           .Append<userver::clients::dns::Component>()
           .Append<userver::components::Mongo>("mongo-db-1");
 
-  mongo_grpc_service_template::AppendHello(component_list);
-  mongo_grpc_service_template::AppendHelloClient(component_list);
+  service_template::AppendHello(component_list);
+  service_template::AppendHelloClient(component_list);
 
   return userver::utils::DaemonMain(argc, argv, component_list);
 }
