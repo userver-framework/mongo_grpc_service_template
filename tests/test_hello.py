@@ -5,8 +5,8 @@ import handlers.hello_pb2 as hello_protos  # noqa: E402, E501
 # Start the tests via `make test-debug` or `make test-release`
 
 
-async def test_grpc_client(mock_grpc_server, grpc_service):
-    @mock_grpc_server('SayHello')
+async def test_grpc_client(grpc_mockserver_new, grpc_service):
+    @grpc_mockserver_new(hello_protos.HelloServiceServicer.SayHello)
     async def mock_say_hello(request, context):
         assert request.name
         return hello_protos.HelloResponse(
